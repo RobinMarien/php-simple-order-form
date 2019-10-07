@@ -22,7 +22,7 @@
             </li>
         </ul>
     </nav>
-    <form method="post">
+    <form method="post" name="order">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="email">E-mail:</label>
@@ -78,3 +78,5 @@
 </style>
 </body>
 </html>
+
+<?php echo whatIsHappening() ?>
