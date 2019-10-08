@@ -17,6 +17,7 @@ function whatIsHappening() {
     echo '<h2>$_SESSION</h2>';
     var_dump($_SESSION);
 }
+
 //your products with their price.
 if(isset($_GET["food"]) && $_GET["food"] == 0){
     $products = [
@@ -37,4 +38,26 @@ if(isset($_GET["food"]) && $_GET["food"] == 0){
 
 $totalValue = 0;
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //E-MAIL
+    $email = test_input($_POST["email"]);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo("<div class='alert alert-danger' role='alert'><a href='#email' class='alert-link'>$email</a> is not a valid email addres!</div>");
+    }
+    //ADDRESS
+    $street = test_input($_POST["street"]);
+    $streetnumber = test_input($_POST["streetnumber"]);
+    $city = test_input($_POST["city"]);
+    $zipcode = test_input($_POST["zipcode"]);
+
+    
+
+}
+
+function test_input($data) {
+    $data = trim($data); // Strip whitespace (or other characters) from the beginning and end of a string
+    $data = stripslashes($data); // Un-quotes a quoted string
+    $data = htmlspecialchars($data); // Convert special characters to HTML entities ( < = &lt; , ... )
+    return $data;
+}
 require 'form-view.php';
