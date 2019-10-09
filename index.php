@@ -6,7 +6,9 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
+
 session_start();
+
 function whatIsHappening() {
     echo '<h2>$_GET</h2>';
     var_dump($_GET);
@@ -90,6 +92,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    //MAKE SURE THEY ACTUALLY ORDERED SOMETHING
+
+    $checked = [];
+
+    if (!empty($_POST["products"])){
+        $checked = $_POST["products"];
+    }
+
+    if (empty($checked)){
+        $errors[] = "You didn't <a href ='#products' class='alert-link'>order</a> anything!";
+    }
+
+
+    //DISPLAY SUCCESS ALERT (if there are no errors/alerts)
+    if (empty($alerts) && empty($errors)) {
+        echo ("<div class='alert alert-success text-center' role='alert'><h4 class='alert-heading'>Hooray!</h4>
+           <p>You've successfully placed your order! Please check your mailbox.</p></div>");
+    }
+
 
 }
 
@@ -98,6 +119,38 @@ function test_input($data) {
     $data = stripslashes($data); // Un-quotes a quoted string
     $data = htmlspecialchars($data); // Convert special characters to HTML entities ( < = &lt; , ... )
     return $data;
+}
+
+// CREATE SESSION VARIABLES
+$street = "";
+$streetnumber = "";
+$city = "";
+$zipcode = "";
+$email = "";
+
+if (!empty($_POST)) {
+    $_SESSION["email"] = $_POST["email"];
+    $_SESSION["street"] = $_POST["street"];
+    $_SESSION["streetnumber"] = $_POST["streetnumber"];
+    $_SESSION["city"] = $_POST["city"];
+    $_SESSION["zipcode"] = $_POST["zipcode"];
+}
+
+if (!empty($_SESSION["email"])) {
+    $email = $_SESSION["email"];
+}
+
+if (!empty($_SESSION["street"])) {
+    $street = $_SESSION["street"];
+}
+if (!empty($_SESSION["streetnumber"])) {
+    $streetnumber = $_SESSION["streetnumber"];
+}
+if (!empty($_SESSION["city"])) {
+    $city = $_SESSION["city"];
+}
+if (!empty($_SESSION["zipcode"])) {
+    $zipcode = $_SESSION["zipcode"];
 }
 
 // DISPLAY ERRORS
@@ -113,6 +166,5 @@ if (!empty($alerts)){
         echo ("<div class='alert alert-warning' role='alert'>" . $alert . "</div>");
     }
 }
-
 
 require 'form-view.php';
