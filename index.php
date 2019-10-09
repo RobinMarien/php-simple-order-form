@@ -38,7 +38,6 @@ if(isset($_GET["food"]) && $_GET["food"] == 0){
     ];
 }
 
-$totalValue = 0;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -109,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($alerts) && empty($errors)) {
         echo ("<div class='alert alert-success text-center' role='alert'><h4 class='alert-heading'>Hooray!</h4>
            <p>You've successfully placed your order! Please check your mailbox.</p></div>");
+        header("Location: " . $_SERVER['REQUEST_URI']);
     }
 
 
@@ -166,5 +166,29 @@ if (!empty($alerts)){
         echo ("<div class='alert alert-warning' role='alert'>" . $alert . "</div>");
     }
 }
+
+// CREATE COOKIES / total amount of money that has been spent
+
+if (!isset($_COOKIE["sum"])){
+    if(!empty($checked)){
+        $totalValue = array_sum($checked);
+        setcookie("sum", strval($totalValue), time()+(365*24*60*60));
+    }
+    else{
+        $totalValue = '0';
+        setcookie("sum", strval($totalValue), time()+(365*24*60*60));
+    }
+}
+else{
+    if (!empty($checked)){
+        $totalValue = $_COOKIE["sum"] + array_sum($checked);
+        setcookie("sum", strval($totalValue), time()+(365*24*60*60));
+    }
+    else{
+        $totalValue = $_COOKIE["sum"];
+        setcookie("sum", strval($totalValue), time()+(365*24*60*60));
+    }
+}
+
 
 require 'form-view.php';
